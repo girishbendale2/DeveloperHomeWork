@@ -1,12 +1,13 @@
 package com.example.webapi.controller;
 
 
-import org.springframework.web.bind.annotation.*;
+import com.example.webapi.dto.RewardDto;
 import com.example.webapi.service.TransactionService;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.Month;
-import java.util.Map;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/rewards")
@@ -19,14 +20,11 @@ public class Controller {
     }
 
     @GetMapping("/{customerId}")
-    public Map<Month, Integer> getRewards(
+    public List<RewardDto> getRewards(
             @PathVariable String customerId,
-            @RequestParam String startDate,
-            @RequestParam String endDate) {
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
 
-        return service.calculateRewards(
-                customerId,
-                LocalDate.parse(startDate),
-                LocalDate.parse(endDate));
+        return service.calculateRewards(customerId, startDate, endDate);
     }
 }
